@@ -31,7 +31,13 @@ io.on('connection', socket => {
         if(position){
             player.objects.push(new PlayerObject(position.x,position.y,200));
 
-            player.objects.push(new PlayerObject(position.x + 200,position.y + 300,200));
+            player.objects.push(new PlayerObject(position.x + 200,position.y + 600,50));
+            player.objects.push(new PlayerObject(position.x + 300,position.y + 500,70));
+            player.objects.push(new PlayerObject(position.x + 400,position.y + 400,10));
+            player.objects.push(new PlayerObject(position.x + 500,position.y + 300,35));
+            player.objects.push(new PlayerObject(position.x + 600,position.y + 200,150));
+            player.objects.push(new PlayerObject(position.x + 700,position.y + 100,180));
+
             getRoomById(room).players.push(player);
             socket.emit('join_success',player);
             socket.broadcast.to(room).emit('newplayer', player);
