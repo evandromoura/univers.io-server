@@ -1,6 +1,7 @@
 class PlayerObject{
 
-    constructor(x,y,mass){
+    constructor(uid,x,y,mass){
+        this.uid = uid;
         this.x = x;
         this.y = y;
         this.mass = mass;

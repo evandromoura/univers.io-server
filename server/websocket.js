@@ -29,20 +29,50 @@ io.on('connection', socket => {
         let player = getPlayerById(socket.id);
         let position = Util.findFreePosition(getRoomById(room));
         if(position){
-            player.objects.push(new PlayerObject(position.x,position.y,200));
-
-            player.objects.push(new PlayerObject(position.x + 200,position.y + 600,50));
-            player.objects.push(new PlayerObject(position.x + 300,position.y + 500,70));
-            player.objects.push(new PlayerObject(position.x + 400,position.y + 400,10));
-            player.objects.push(new PlayerObject(position.x + 500,position.y + 300,35));
-            player.objects.push(new PlayerObject(position.x + 600,position.y + 200,150));
-            player.objects.push(new PlayerObject(position.x + 700,position.y + 100,180));
-
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,450));
+            
+            player.activeroom = room;
             getRoomById(room).players.push(player);
             socket.emit('join_success',player);
+            socket.emit('loadplayers',getRoomById(room).players);
             socket.broadcast.to(room).emit('newplayer', player);
         }
     });
+
+    socket.on('updatePosition', (room,player) => {
+        let playerM = getPlayerRoom(room,socket.id);
+        if(playerM && player){
+            let objectsP = player.objects;
+            for(let obj of objectsP){
+                let objM = playerM.objects.find(objI =>objI.id === obj.id);
+                if(objM){
+                    objM.x = obj.x;
+                    objM.y = obj.y;
+                }
+            }
+            socket.broadcast.to(room).emit('updatepositionplayer',playerM);
+        }
+    });
+
+    socket.on('disconnect',()=>{
+        try{
+            let player = getPlayerById(socket.id);
+            let indexPlayerMain = getIndexPlayerById(socket.id);
+            console.log('Disconnect',socket.id);
+            let playerRoom = getPlayerRoom(player.activeroom,socket.id);
+            if(playerRoom){
+                let indexPlayer = getRoomById(player.activeroom).players.findIndex(play => play.id === socket.id);
+                let playersRoom = getRoomById(player.activeroom).players;
+                if(indexPlayer !== -1 && playersRoom){
+                    playersRoom.splice(indexPlayer);
+                    players.splice(indexPlayerMain);
+                    socket.broadcast.to(player.activeroom).emit('disconnectplayer', socket.id);
+                }
+            }
+        }catch(e){
+            console.log(e);
+        }
+    })
 
 });
 
@@ -53,8 +83,24 @@ function getPlayerById(id){
     return players.find(player =>player.id === id);
 }
 
+function getIndexPlayerById(id){
+    return players.findIndex(player =>player.id === id);
+}
+
 function getRoomById(id){
-    return rooms.find(room =>room.id === id);
+    let roomById = rooms.find(room =>room.id === id);
+    return roomById;
+}
+
+function getPlayerRoom(room, id){
+    let roomObj = getRoomById(room);
+    if(roomObj && roomObj.players){
+        return roomObj.players.find(obj=>obj.id === id);
+    }
+}
+
+function getIndexPlayerRoom(room, id){
+    return getRoomById(room).players.findIndex(obj=>obj.id === id);
 }
 
 function initRooms(){

@@ -5,6 +5,7 @@ class Player{
         this.uid = uid;
         this.name = '';
         this.objects = [];
+        this.activeroom = '';
     }
 }
 
