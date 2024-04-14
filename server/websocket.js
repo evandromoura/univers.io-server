@@ -30,6 +30,29 @@ io.on('connection', socket => {
         let position = Util.findFreePosition(getRoomById(room));
         if(position){
             player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,450));
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,120));
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,300));
+
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,100));
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,100));
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,100));
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,100));
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,100));
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,100));
+
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,180));
+
+            position = Util.findFreePosition(getRoomById(room));
+            player.objects.push(new PlayerObject(Util.generateUID(),position.x,position.y,250));
             
             player.activeroom = room;
             getRoomById(room).players.push(player);
